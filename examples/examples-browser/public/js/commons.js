@@ -26,7 +26,7 @@ function renderNavBar(navbarId, exampleUri) {
   const examples = [
     {
       uri: 'face_detection',
-      name: 'Face Detection'
+      name: 'Detección Facial'
     },
     {
       uri: 'face_landmark_detection',

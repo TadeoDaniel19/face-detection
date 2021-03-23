@@ -1,8 +1,11 @@
 const express = require('express')
 const path = require('path')
 const { get } = require('request')
+const serverless = require('serverless-http');
+const bodyParser = require('body-parser');
 
 const app = express()
+const router = express.Router()
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -16,6 +19,8 @@ app.use(express.static(path.join(__dirname, '../../weights')))
 app.use(express.static(path.join(__dirname, '../../dist')))
 
 app.get('/', (req, res) => res.redirect('/face_detection'))
+app.use('/.netlify/functions/server', router);  // path must route to lambda
+
 app.get('/face_detection', (req, res) => res.sendFile(path.join(viewsDir, 'faceDetection.html')))
 app.get('/face_landmark_detection', (req, res) => res.sendFile(path.join(viewsDir, 'faceLandmarkDetection.html')))
 app.get('/face_expression_recognition', (req, res) => res.sendFile(path.join(viewsDir, 'faceExpressionRecognition.html')))
@@ -71,3 +76,6 @@ function request(url, returnBuffer = true, timeout = 10000) {
     })
   })
 }
+
+module.exports = app;
+module.exports.handler = serverless(app);
